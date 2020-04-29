@@ -1,0 +1,88 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ object.author }}</a>
+        <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+        {% if object.author == user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+          </div>
+        {% endif %}
+      </div>
+        <h2 class="article-title">{{ object.title }}</h2>
+        <p class="article-content">{{ object.content }}</p>
+      </div>
+  </article>
+<article class="media-body">
+    <center><h2 class="article-title">POS Tagging output for <span style="color:#cc0000;">{{ object.title }}</span></h2></center>
+    <div class="tab">
+      <button class="tablinks" onclick="openView(event, 'Normal')" id="defaultOpen">Normal</button>
+      <button class="tablinks" onclick="openView(event, 'List')">List</button>
+      <button class="tablinks" onclick="openView(event, 'Hover')">Hover</button>
+
+    </div>
+
+    <div id="Normal" class="tabcontent">
+
+        <div>
+          <p>
+              {% for word1,word2 in result %}
+              {{ word1 }}/<b>{{ word2 }}</b></span>
+          {% endfor %}
+          </p>
+
+
+        </div>
+    </div>
+
+    <div id="List" class="tabcontent">
+
+        <div>
+          {% for word1,word2 in result %}
+          <p>{{ word1 }}/<span style="color:white;margin:3px;padding:3px;background-color:grey;border-radius:4px">{{ word2 }}</span></p>
+          {% endfor %}
+
+        </div>
+
+    </div>
+
+    <div id="Hover" class="tabcontent">
+
+        <div>
+            <p>
+              {% for word1,word2 in result %}
+              <div class="tooltip1">{{ word1 }}
+                    <span class="tooltiptext">{{ word2 }}</span>
+                </div>
+              {% endfor %}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+    function openView(evt, cityName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    document.getElementById("defaultOpen").click();
+    </script>
+
+
+  </article>
+{% endblock content %}
